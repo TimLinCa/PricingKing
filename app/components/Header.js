@@ -1,13 +1,13 @@
-"use client"
+"use client";
 import Image from "next/image";
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import { AiOutlineSearch } from 'react-icons/ai';
 import logo from "../images/logo.png";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, cn, Divider, Avatar, Checkbox, Input } from "@nextui-org/react";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Rating } from 'react-simple-star-rating'
 const Header = (props) => {
 
@@ -17,7 +17,6 @@ const Header = (props) => {
     const [rating, setRating] = React.useState(4);
     const [searchQuery, setSearchQuery] = useState('');
 
-    const productName = useRef("");
     const router = useRouter();
     const [reviews, setReviews] = useState(0);
     const handleRating = (rate) => { setRating(rate) }
@@ -36,7 +35,7 @@ const Header = (props) => {
 
         const encodeSearchQuery = encodeURI(searchQuery);
         if (encodeSearchQuery != null && encodeSearchQuery != '') {
-            productName.current = encodeSearchQuery;
+
             let sortByOption = '';
             if (selectedSortValue === "Default") {
                 sortByOption = '&sort=default';

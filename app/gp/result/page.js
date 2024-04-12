@@ -1,24 +1,13 @@
-import ProductList from "../../components/productList";
+"use client";
+import { useSearchParams } from "next/navigation";
+import { CircularProgress } from "@nextui-org/react";
+import ProductList from "../../components/ProductList";
+import axios from "axios";
+import useSWR from 'swr';
 
-import { SearchProduct } from "../../lib/searchProduct";
 
-const getProductListData = async (wb, productName, isRating, rating, isReviews, reviews, sortByOption, targetResult) => {
-
-    let minRating = null;
-    let minReviews = null;
-    if (isRating) {
-        minRating = rating;
-    }
-    if (isReviews) {
-        minReviews = reviews;
-    }
-    //website, productName, sortByOption, minRating, minReviews, targetResult
-    const productList = await SearchProduct(wb, productName, sortByOption, minRating, minReviews, targetResult);
-
-    return productList;
-}
-
-export default async function SearchPage({ params, searchParams }) {
+export default function SearchPage({ searchParams }) {
+    console.log(searchParams);
     const wb = searchParams['wb'];
     const productName = searchParams['q'];
     const isRating = searchParams['ir'];
@@ -27,15 +16,78 @@ export default async function SearchPage({ params, searchParams }) {
     const reviews = searchParams['res'];
     const sortByOption = searchParams['sort'];
 
+    const { data: productList, error, isLoading } = useSWR({
+        wb: wb,
+        productName: productName,
+        isRating: isRating,
+        rating: rating,
+        isReviews: isReviews,
+        reviews: reviews,
+        sortByOption: sortByOption
+    },
+        productListFetcher, { revalidateOnFocus: false });
 
-    const productList = await getProductListData(wb, productName, isRating, rating, isReviews, reviews, sortByOption, 10);
+    console.log(error);
+    console.log(productList);
 
     return (
-
         <div className=" m-8">
             {
-                <ProductList productList={productList}></ProductList>
+
+                isLoading ? <CircularProgress label="Searching..."></CircularProgress> :
+                    error ? <div>Something went wrong, Please try again.</div> :
+                        <ProductList productList={productList} />
             }
         </div>
     );
+}
+
+
+const productListFetcher = async (params) => {
+    const { wb, productName, isRating, rating, isReviews, reviews, sortByOption } = params;
+
+    const AmazonAPI = "/api/searchAmazon";
+    const WalmartAPI = "/api/searchWalmart";
+    console.log(sortByOption);
+    const request = {
+        "productName": productName,
+        "sortByOption": sortByOption,
+    }
+
+
+    console.log(isReviews);
+    console.log(isRating);
+    if (isRating === 'true') {
+        request.rating = rating;
+    }
+
+    if (isReviews === 'true') {
+        request.reviews = reviews;
+    }
+
+    console.log(request);
+    let AmazonProductList = null;
+    let WalmartProductList = null;
+    if (wb.includes('Amazon')) {
+        const amazon_res = await axios.post(AmazonAPI, request);
+        AmazonProductList = amazon_res.data;
+    }
+
+    // if (wb.includes('Walmart')) {
+    //     const walmart_res = await axios.post(WalmartAPI, request);
+    //     WalmartProductList = walmart_res.data;
+    // }
+
+    //concat two lists
+    let productList = null;
+    if (AmazonProductList && WalmartProductList) {
+        productList = AmazonProductList.concat(WalmartProductList);
+    }
+    else if (AmazonProductList) {
+        productList = AmazonProductList;
+    }
+    else if (WalmartProductList) {
+        productList = WalmartProductList;
+    }
+    return productList;
 }
