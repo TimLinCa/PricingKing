@@ -1,7 +1,8 @@
 
 import { NextResponse } from 'next/server'
-
-const playwright = require("playwright");
+const puppeteer = require("puppeteer-core");
+// const chromium = require("@sparticuz/chromium");
+const { chromium } = require("playwright");
 export async function POST(req) {
     try {
         // let puppeteer;
@@ -27,7 +28,8 @@ export async function POST(req) {
         chromium.setHeadlessMode = true;
         chromium.setGraphicsMode = false;
         console.log('start fetching');
-        const browser = await playwright.chromium.launch({ headless: true });
+        const browser = await chromium.launch({ headless: true });
+        console.log('browser launched')
         // const browser = await puppeteer.launch({
         //     args: chromium.args,
         //     defaultViewport: chromium.defaultViewport,
@@ -35,9 +37,8 @@ export async function POST(req) {
         //     headless: chromium.headless,
         //     ignoreHTTPSErrors: true,
         // });
-        console.log('start fetching')
 
-        console.log(req);
+
         let sortByOption = 'features';
         let targetResult = 10;
         let rating = null;
@@ -159,6 +160,7 @@ export async function POST(req) {
         // }
 
         await browser.close();
+        console.log('browser closed')
         return NextResponse.json(results, { status: 200 });
 
     }
