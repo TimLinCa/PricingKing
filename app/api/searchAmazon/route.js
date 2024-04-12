@@ -168,13 +168,13 @@ export async function GET(req) {
     );
 }
 
-const waitTillAmazonHTMLRendered = async (page, timeout = 5000) => {
+const waitTillAmazonHTMLRendered = async (page, timeout = 3000) => {
     const checkDurationMsecs = 500;
     const maxChecks = timeout / checkDurationMsecs;
     let lastHTMLSize = 0;
     let checkCounts = 1;
     let countStableSizeIterations = 0;
-    const minStableSizeIterations = 2;
+    const minStableSizeIterations = 0;
     await page.waitForSelector(".s-result-list");
 
     while (checkCounts++ <= maxChecks) {
