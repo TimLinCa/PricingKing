@@ -1,7 +1,6 @@
 
 import { NextResponse } from 'next/server'
-const puppeteer = require("puppeteer-core");
-const chromium = require("@sparticuz/chromium");
+
 const playwright = require("playwright");
 export async function POST(req) {
     try {
