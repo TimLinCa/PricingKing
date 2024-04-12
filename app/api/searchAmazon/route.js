@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-");
 
 import { NextResponse } from 'next/server'
 export async function POST(req) {
@@ -28,9 +28,9 @@ export async function POST(req) {
 
 
         let results = [];
-        // let gotResults = 0;
-        // let firstPage = true;
-        // const browser = await puppeteer.launch();
+        let gotResults = 0;
+        let firstPage = true;
+        const browser = await puppeteer.launch();
         // let searchBoxElement = null;
         // let page = null;
         // let sortURL = null;
@@ -124,7 +124,7 @@ export async function POST(req) {
         //     }
         // }
 
-        // await browser.close();
+        await browser.close();
         return NextResponse.json(results, { status: 200 });
 
     }
