@@ -12,6 +12,14 @@ export default function ProductCard({ product }) {
                         }>Amazon</Chip>
                     </Link>
                 </div>
+            case 'Walmart':
+                return <div className='flex items-center'>
+                    <Link style={{ display: "table-cell" }} target='_blank' href={"https://www.walmart.ca/"} >
+                        <Chip radius="md" className='pl-1 max-w-[28px]' color="success" variant="bordered" avatar={
+                            <Avatar color='secondary' name="Walmart" src="https://upload.wikimedia.org/wikipedia/commons/1/14/Walmart_Spark.svg" />
+                        }>Walmart</Chip>
+                    </Link>
+                </div>
         }
     }
 

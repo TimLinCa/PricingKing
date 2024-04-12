@@ -1,10 +1,10 @@
 const puppeteer = require("puppeteer");
 const random_useragent = require('random-useragent');
-// const puppeteer = require('puppeteer-extra')
-// const StealthPlugin = require('puppeteer-extra-plugin-stealth')
-// puppeteer.use(StealthPlugin())
+
+import { NextResponse } from 'next/server'
 
 export async function POST(req) {
+    console.log(process.env.NEXT_PUBLIC_CRAWLBASE_APIKEY);
     let sortByOption = 'features';
     let targetResult = 10;
     let rating = null;
@@ -31,7 +31,6 @@ export async function POST(req) {
     let results = [];
     let gotResults = 0;
     let firstPage = true;
-    const browser = await puppeteer.launch({ headless: false });
     let pageNumber = 1;
     let page = null;
     let sortURL = null;
@@ -43,82 +42,100 @@ export async function POST(req) {
         sortURL = '&sort=price_high';
     }
     let url = `https://www.walmart.ca/en/search?q=${productName}`;
+
     if (sortURL != null) {
         url = url + sortURL;
     }
-    page = await browser.newPage();
-    await page.setUserAgent(random_useragent.getRandom());
-    console.log(url)
-    await page.goto(url, { 'timeout': 10000, 'waitUntil': 'load' });
-    await waitTillHTMLRendered(page);
+    url = encodeURIComponent(url);
+    const API_KEY = process.env.NEXT_PUBLIC_CRAWLBASE_APIKEY;
+    const crawlbaseUrl = `https://api.crawlbase.com/scraper?token=${API_KEY}&url=${url}`;
+    console.log(crawlbaseUrl);
+    const res = await fetch(crawlbaseUrl);
+    console.log(res);
+    const data = await res.json();
+    console.log(data);
+    // console.log(url);
+    // const response = await api.get(url);
+    // console.log(response.body);
+    // const $ = cheerio.load(response.body)
+    // console.log($);
+    // await page.setUserAgent(random_useragent.getRandom());
+    // console.log(url)
+    // await page.goto(url, { 'timeout': 10000, 'waitUntil': 'load' });
+    // await waitTillHTMLRendered(page);
 
-    while (gotResults < targetResult) {
-        console.log("Page number: ", pageNumber);
-        if (!firstPage) {
-            await waitTillHTMLRendered(page);
+    // while (gotResults < targetResult) {
+    //     console.log("Page number: ", pageNumber);
+    //     if (!firstPage) {
+    //         await waitTillHTMLRendered(page);
+    //     }
+    //     firstPage = false;
+
+    //     const searchResults = await page.$$("div.pb3-m");
+    //     console.log('start searchResults');
+    //     console.log(searchResults.length);
+    //     for (let i = 0; i < searchResults.length; i++) {
+    //         const title = await searchResults[i].$eval("span[data-automation-id='product-title']", (n) => n.innerText);
+    //         const link = await searchResults[i].$eval("a.hide-sibling-opacity", (n) => n.href);
+    //         const imgPath = await searchResults[i].$eval("img[data-testid='productTileImage']", (n) => n.src);
+
+    //         let starts = null;
+    //         let reviews = null;
+
+    //         const reviewsElement = await searchResults[i].$("div.flex.items-center.mt2");
+    //         if (rating != null && reviewsElement == null) continue;
+
+    //         if (reviewsElement != null) {
+    //             const ratingString = await reviewsElement.$eval("span.w_q67L", (n) => n.innerText);
+    //             let starts = (ratingString.split(" out of 5 stars")[0]).toFixed(1);
+    //             let reviews = (ratingString.split(" out of 5 stars")[1]).split(" ")[0];
+    //             reviews = reviews.replace(",", "");
+    //             reviews = parseInt(reviews);
+    //             if (isNaN(reviews) || reviews < minReviews) continue;
+    //             if (starts < rating) continue;
+    //         }
+
+
+    //         let price = null;
+    //         const priceElement = await searchResults[i].$("span[data-automation-id='product-price']");
+
+    //         if (priceElement != null) {
+    //             price = await priceElement.evaluate((n) => n.innerText);
+    //             price = price.replace("$", "");
+    //         }
+
+    //         gotResults++;
+
+    //         if (gotResults == targetResult) {
+    //             break;
+    //         }
+
+    //         results.push({ title, imgPath, starts, price, link, reviews, "website": "Amazon" });
+    //     }
+
+    //     if (gotResults == targetResult) {
+    //         break;
+    //     }
+    //     else {
+    //         if (await page.$("a[data-testid='NextPage']") != null) {
+    //             pageNumber = pageNumber + 1;
+    //             const pageUrl = `&page=${pageNumber}`
+    //             await page.goto(url + pageUrl, { 'timeout': 10000, 'waitUntil': 'load' });
+    //         }
+    //         else {
+    //             break;
+    //         }
+    //     }
+    // }
+
+    // await browser.close();
+    return NextResponse.json(
+        {
+            "status": "success",
+            "message": "POST request was successful"
         }
-        firstPage = false;
+    );
 
-        const searchResults = await page.$$("div.pb3-m");
-        console.log('start searchResults');
-        console.log(searchResults.length);
-        for (let i = 0; i < searchResults.length; i++) {
-            const title = await searchResults[i].$eval("span[data-automation-id='product-title']", (n) => n.innerText);
-            const link = await searchResults[i].$eval("a.hide-sibling-opacity", (n) => n.href);
-            const imgPath = await searchResults[i].$eval("img[data-testid='productTileImage']", (n) => n.src);
-
-            let starts = null;
-            let reviews = null;
-
-            const reviewsElement = await searchResults[i].$("div.flex.items-center.mt2");
-            if (rating != null && reviewsElement == null) continue;
-
-            if (reviewsElement != null) {
-                const ratingString = await reviewsElement.$eval("span.w_q67L", (n) => n.innerText);
-                let starts = (ratingString.split(" out of 5 stars")[0]).toFixed(1);
-                let reviews = (ratingString.split(" out of 5 stars")[1]).split(" ")[0];
-                reviews = reviews.replace(",", "");
-                reviews = parseInt(reviews);
-                if (isNaN(reviews) || reviews < minReviews) continue;
-                if (starts < rating) continue;
-            }
-
-
-            let price = null;
-            const priceElement = await searchResults[i].$("span[data-automation-id='product-price']");
-
-            if (priceElement != null) {
-                price = await priceElement.evaluate((n) => n.innerText);
-                price = price.replace("$", "");
-            }
-
-            gotResults++;
-
-            if (gotResults == targetResult) {
-                break;
-            }
-
-            results.push({ title, imgPath, starts, price, link, reviews, "website": "Amazon" });
-        }
-
-        if (gotResults == targetResult) {
-            break;
-        }
-        else {
-            if (await page.$("a[data-testid='NextPage']") != null) {
-                pageNumber = pageNumber + 1;
-                const pageUrl = `&page=${pageNumber}`
-                await page.goto(url + pageUrl, { 'timeout': 10000, 'waitUntil': 'load' });
-            }
-            else {
-                break;
-            }
-        }
-    }
-
-    await browser.close();
-
-    return Response.json(results)
 }
 
 export async function GET(req, res) {
