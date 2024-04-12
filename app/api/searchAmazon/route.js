@@ -1,42 +1,39 @@
 
 import { NextResponse } from 'next/server'
 const puppeteer = require("puppeteer-core");
-// const chromium = require("@sparticuz/chromium");
-const { chromium } = require("playwright");
+export const dynamic = "force-dynamic";
+const chromium = require("@sparticuz/chromium");
+
+const localExecutablePath =
+    process.platform === "win32"
+        ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+        : process.platform === "linux"
+            ? "/usr/bin/google-chrome"
+            : "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+
+const remoteExecutablePath =
+    "https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar";
+
+const isDev = process.env.NODE_ENV === "development";
+
+
+// const { chromium } = require("playwright");
 export async function POST(req) {
+    let browser = null;
     try {
-        // let puppeteer;
-        // let browser = null;
-        // if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
-        //     // running on the Vercel platform.
-        //     console.log("Running on Vercel platform");
-        //     chromium = require('chrome-aws-lambda');
-        //     puppeteer = require('puppeteer-core');
-        //     browser = await chromium.puppeteer.launch({
-        //         args: chromium.args,
-        //         defaultViewport: chromium.defaultViewport,
-        //         executablePath: await chromium.executablePath,
-        //         headless: chromium.headless,
-        //         ignoreHTTPSErrors: true,
-        //     });
-        // } else {
-        //     // running locally.
-        //     console.log("Running locally");
-        //     puppeteer = require('puppeteer');
-        //     browser = await puppeteer.launch();
-        // }
-        chromium.setHeadlessMode = true;
-        chromium.setGraphicsMode = false;
+        console.log(isDev);
+        browser = await puppeteer.launch({
+            args: isDev ? [] : chromium.args,
+            defaultViewport: { width: 1920, height: 1080 },
+            executablePath: isDev
+                ? localExecutablePath
+                : await chromium.executablePath(remoteExecutablePath),
+            headless: chromium.headless,
+        });
+        //headless: chromium.headless,
         console.log('start fetching');
-        const browser = await chromium.launch({ headless: true });
+        // const browser = await chromium.launch({ headless: true });
         console.log('browser launched')
-        // const browser = await puppeteer.launch({
-        //     args: chromium.args,
-        //     defaultViewport: chromium.defaultViewport,
-        //     executablePath: await chromium.executablePath("https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar"),
-        //     headless: chromium.headless,
-        //     ignoreHTTPSErrors: true,
-        // });
 
 
         let sortByOption = 'features';
