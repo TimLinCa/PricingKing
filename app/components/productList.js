@@ -1,9 +1,8 @@
 "use client";
 
 import React from 'react';
-import { useState } from 'react';
 import ProductCard from './productCard';
-import { Divider, ScrollShadow } from "@nextui-org/react";
+import { Divider } from "@nextui-org/react";
 import useSWR from 'swr';
 import axios from "axios";
 import { CircularProgress } from "@nextui-org/react";

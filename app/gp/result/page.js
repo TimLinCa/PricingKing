@@ -1,5 +1,3 @@
-import { useSearchParams } from "next/navigation";
-import { CircularProgress } from "@nextui-org/react";
 import ProductList from "../../components/ProductList";
 import axios from "axios";
 
@@ -13,24 +11,6 @@ export default function SearchPage({ params, searchParams }) {
     const rating = searchParams['r'];
     const reviews = searchParams['res'];
     const sortByOption = searchParams['sort'];
-
-    // const wb = searchParams.get('wb');
-    // const productName = searchParams.get('q');
-    // const isRating = searchParams.get('ir');
-    // const isReviews = searchParams.get('ire');
-    // const rating = searchParams.get('r');
-    // const reviews = searchParams.get('res');
-    // const sortByOption = searchParams.get('sort');
-    // const { data: productList, error, isLoading } = useSWR({ wb: wb, productName: productName, isRating: isRating, rating: rating, isReviews: isReviews, reviews: reviews, sortByOption: sortByOption }, productListFetcher, { revalidateOnFocus: false });
-    // if (isLoading) {
-    //     return <CircularProgress />;
-    // }
-
-    // if (error) {
-    //     return <div>Something went wrong, Please try again.</div>
-    // }
-
-    // const { data: productList, error } = useSWR({ wb: wb, productName: productName, isRating: isRating, rating: rating, isReviews: isReviews, reviews: reviews, sortByOption: sortByOption }, productListFetcher, { revalidateOnFocus: false, suspense: true });
 
     return (
 
