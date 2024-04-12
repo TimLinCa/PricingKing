@@ -4,7 +4,6 @@ import ProductList from "../../components/productList";
 import axios from "axios";
 import useSWR from 'swr';
 
-
 export default function SearchPage({ searchParams }) {
     console.log(searchParams);
     const wb = searchParams['wb'];
@@ -64,11 +63,14 @@ const productListFetcher = async (params) => {
         request.reviews = reviews;
     }
 
+    //website, productName, sortByOption, minRating, minReviews, targetResult
+
     console.log(request);
     let AmazonProductList = null;
     let WalmartProductList = null;
     if (wb.includes('Amazon')) {
         const amazon_res = await axios.post(AmazonAPI, request);
+
         AmazonProductList = amazon_res.data;
     }
 

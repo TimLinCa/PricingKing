@@ -2,9 +2,6 @@
 import React from 'react';
 import ProductCard from './productCard';
 import { Divider } from "@nextui-org/react";
-import useSWR from 'swr';
-import axios from "axios";
-
 
 import { CircularProgress } from "@nextui-org/react";
 
