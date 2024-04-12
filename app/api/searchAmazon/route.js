@@ -1,8 +1,43 @@
-const puppeteer = require("puppeteer");
 
 import { NextResponse } from 'next/server'
+const puppeteer = require("puppeteer-core");
+const chromium = require("@sparticuz/chromium");
+const playwright = require("playwright");
 export async function POST(req) {
     try {
+        // let puppeteer;
+        // let browser = null;
+        // if (process.env.AWS_LAMBDA_FUNCTION_VERSION) {
+        //     // running on the Vercel platform.
+        //     console.log("Running on Vercel platform");
+        //     chromium = require('chrome-aws-lambda');
+        //     puppeteer = require('puppeteer-core');
+        //     browser = await chromium.puppeteer.launch({
+        //         args: chromium.args,
+        //         defaultViewport: chromium.defaultViewport,
+        //         executablePath: await chromium.executablePath,
+        //         headless: chromium.headless,
+        //         ignoreHTTPSErrors: true,
+        //     });
+        // } else {
+        //     // running locally.
+        //     console.log("Running locally");
+        //     puppeteer = require('puppeteer');
+        //     browser = await puppeteer.launch();
+        // }
+        chromium.setHeadlessMode = true;
+        chromium.setGraphicsMode = false;
+        console.log('start fetching');
+        const browser = await playwright.chromium.launch({ headless: true });
+        // const browser = await puppeteer.launch({
+        //     args: chromium.args,
+        //     defaultViewport: chromium.defaultViewport,
+        //     executablePath: await chromium.executablePath("https://github.com/Sparticuz/chromium/releases/download/v123.0.1/chromium-v123.0.1-pack.tar"),
+        //     headless: chromium.headless,
+        //     ignoreHTTPSErrors: true,
+        // });
+        console.log('start fetching')
+
         console.log(req);
         let sortByOption = 'features';
         let targetResult = 10;
@@ -30,7 +65,7 @@ export async function POST(req) {
         let results = [];
         let gotResults = 0;
         let firstPage = true;
-        const browser = await puppeteer.launch();
+
         // let searchBoxElement = null;
         // let page = null;
         // let sortURL = null;
@@ -129,6 +164,7 @@ export async function POST(req) {
 
     }
     catch (err) {
+        console.log(err);
         return NextResponse.json({ error: err }, { status: 500 });
     }
 
