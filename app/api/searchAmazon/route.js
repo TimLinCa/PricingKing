@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer-");
+const puppeteer = require("puppeteer");
 
 import { NextResponse } from 'next/server'
 export async function POST(req) {
