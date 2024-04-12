@@ -1,10 +1,54 @@
-"use client";
-
 import { useSearchParams } from "next/navigation";
 import { CircularProgress } from "@nextui-org/react";
 import ProductList from "../../components/ProductList";
 import axios from "axios";
-import useSWR from 'swr';
+
+
+export default function SearchPage({ params, searchParams }) {
+    console.log(searchParams);
+    const wb = searchParams['wb'];
+    const productName = searchParams['q'];
+    const isRating = searchParams['ir'];
+    const isReviews = searchParams['ire'];
+    const rating = searchParams['r'];
+    const reviews = searchParams['res'];
+    const sortByOption = searchParams['sort'];
+
+    // const wb = searchParams.get('wb');
+    // const productName = searchParams.get('q');
+    // const isRating = searchParams.get('ir');
+    // const isReviews = searchParams.get('ire');
+    // const rating = searchParams.get('r');
+    // const reviews = searchParams.get('res');
+    // const sortByOption = searchParams.get('sort');
+    // const { data: productList, error, isLoading } = useSWR({ wb: wb, productName: productName, isRating: isRating, rating: rating, isReviews: isReviews, reviews: reviews, sortByOption: sortByOption }, productListFetcher, { revalidateOnFocus: false });
+    // if (isLoading) {
+    //     return <CircularProgress />;
+    // }
+
+    // if (error) {
+    //     return <div>Something went wrong, Please try again.</div>
+    // }
+
+    // const { data: productList, error } = useSWR({ wb: wb, productName: productName, isRating: isRating, rating: rating, isReviews: isReviews, reviews: reviews, sortByOption: sortByOption }, productListFetcher, { revalidateOnFocus: false, suspense: true });
+
+    return (
+
+        <div className=" m-8">
+            {
+                <ProductList
+                    wb={wb}
+                    productName={productName}
+                    isRating={isRating}
+                    isReviews={isReviews}
+                    rating={rating}
+                    reviews={reviews}
+                    sortByOption={sortByOption} />
+            }
+        </div>
+
+    );
+}
 
 const productListFetcher = async (params) => {
     const { wb, productName, isRating, rating, isReviews, reviews, sortByOption } = params;
@@ -53,33 +97,4 @@ const productListFetcher = async (params) => {
         productList = WalmartProductList;
     }
     return productList;
-}
-
-
-export default function SearchPage() {
-    const searchParams = useSearchParams();
-    const wb = searchParams.get('wb');
-    const productName = searchParams.get('q');
-    const isRating = searchParams.get('ir');
-    const isReviews = searchParams.get('ire');
-    const rating = searchParams.get('r');
-    const reviews = searchParams.get('res');
-    const sortByOption = searchParams.get('sort');
-    console.log(sortByOption);
-    const { data: productList, error } = useSWR({ wb: wb, productName: productName, isRating: isRating, rating: rating, isReviews: isReviews, reviews: reviews, sortByOption: sortByOption }, productListFetcher, { revalidateOnFocus: false });
-
-    console.log(error);
-    console.log(productList);
-
-    return (
-        <div className=" m-8">
-            {
-                error ? <div>Something went wrong, Please try again.</div> :
-                    !productList ? <CircularProgress /> :
-                        <ProductList productList={productList} />
-
-
-            }
-        </div>
-    );
 }

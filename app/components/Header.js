@@ -52,7 +52,7 @@ const Header = (props) => {
     }
 
     return (
-        <header className='header sticky top-0 z-50 bg-secondary-100'>
+        <div className='header sticky top-0 z-50 bg-secondary-100'>
             <div>
                 <div className='flex flex-row py-[15px]'>
                     <div className="flex-1 ml-5">
@@ -178,7 +178,7 @@ const Header = (props) => {
                 </div>
             </div>
             <Divider />
-        </header >
+        </div >
 
 
 

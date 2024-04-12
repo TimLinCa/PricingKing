@@ -9,8 +9,8 @@ const nextConfig = {
             },
         ]
     },
-};
 
+};
 
 
 

@@ -12,16 +12,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
     return (
-        <Providers>
-            <div>
-                <Header></Header>
-                <div className="grid grid-cols-[20%_80%]">
-                    <div></div>
-                    <div>{children}</div>
-                </div>
-            </div>
 
-        </Providers>
+        <div>
+            <Header></Header>
+            <div className="grid grid-cols-[20%_80%]">
+                <div></div>
+                <div>{children}</div>
+            </div>
+        </div>
+
 
 
     );
