@@ -1,7 +1,6 @@
 "use client";
-import { useSearchParams } from "next/navigation";
 import { CircularProgress } from "@nextui-org/react";
-import ProductList from "../../components/ProductList";
+import ProductList from "../../components/productList";
 import axios from "axios";
 import useSWR from 'swr';
 
