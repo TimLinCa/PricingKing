@@ -69,8 +69,9 @@ const productListFetcher = async (params) => {
     let AmazonProductList = null;
     let WalmartProductList = null;
     if (wb.includes('Amazon')) {
+        console.log('Run');
         const amazon_res = await axios.post(AmazonAPI, request);
-
+        console.log(amazon_res.data);
         AmazonProductList = amazon_res.data;
     }
 
