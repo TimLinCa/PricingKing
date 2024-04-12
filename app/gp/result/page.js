@@ -43,18 +43,18 @@ export default function SearchPage({ searchParams }) {
 
 const productListFetcher = async (params) => {
     const { wb, productName, isRating, rating, isReviews, reviews, sortByOption } = params;
-
+    const browserAPI = "/api/openBrowser";
     const AmazonAPI = "/api/searchAmazon";
     const WalmartAPI = "/api/searchWalmart";
     console.log(sortByOption);
+    const apiKey = process.env.ScraperApiKey;
+
+
     const request = {
         "productName": productName,
         "sortByOption": sortByOption,
     }
 
-
-    console.log(isReviews);
-    console.log(isRating);
     if (isRating === 'true') {
         request.rating = rating;
     }
@@ -65,14 +65,15 @@ const productListFetcher = async (params) => {
 
     //website, productName, sortByOption, minRating, minReviews, targetResult
 
-    console.log(request);
     let AmazonProductList = null;
     let WalmartProductList = null;
     if (wb.includes('Amazon')) {
-        console.log('Run');
-        const amazon_res = await axios.post(AmazonAPI, request);
-        console.log(amazon_res.data);
-        AmazonProductList = amazon_res.data;
+
+        // const amazon_res = await axios.post(AmazonAPI, request);
+
+        // AmazonProductList = amazon_res.data;
+
+        AmazonProductList = await SearchAmazon(productName, sortByOption);
     }
 
     // if (wb.includes('Walmart')) {
@@ -81,7 +82,7 @@ const productListFetcher = async (params) => {
     // }
 
     //concat two lists
-    let productList = null;
+    let productList = [];
     if (AmazonProductList && WalmartProductList) {
         productList = AmazonProductList.concat(WalmartProductList);
     }
@@ -92,4 +93,38 @@ const productListFetcher = async (params) => {
         productList = WalmartProductList;
     }
     return productList;
+}
+
+const SearchAmazon = async (productName, sortByOption) => {
+    let AmazonUrl = `https://www.amazon.ca/s?k=${productName}`;
+    let sortURL = null;
+    if (sortByOption == 'priceLowToHigh') {
+        sortURL = '&s=price-asc-rank';
+    }
+    else if (sortByOption == 'priceHighToLow') {
+        sortURL = '&s=price-desc-rank';
+    }
+    if (sortURL != null) {
+        AmazonUrl = AmazonUrl + sortURL;
+    }
+    const ScraperApiKey = process.env.NEXT_PUBLIC_SCRAPER_APIKEY;
+    console.log(ScraperApiKey);
+    let ScraperApi = `https://api.scraperapi.com/?api_key=${ScraperApiKey}&url=${AmazonUrl}&autoparse=true`;
+
+    const amazon_res = await axios.post(ScraperApi);
+    const results = [];
+    console.log(amazon_res.data.results);
+    for (let product of amazon_res.data.results) {
+        results.push({
+            title: product['name'],
+            imgPath: product['image'],
+            starts: product['stars'],
+            price: product['price_string'],
+            link: product['url'],
+            reviews: product['total_reviews'],
+            "website": "Amazon"
+        });
+    }
+
+    return results;
 }

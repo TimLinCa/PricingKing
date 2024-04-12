@@ -21,6 +21,16 @@ const isDev = process.env.NODE_ENV === "development";
 export async function POST(req) {
     let browser = null;
     try {
+
+        browser = await puppeteer.launch({
+            args: isDev ? [] : chromium.args,
+            defaultViewport: { width: 1920, height: 1080 },
+            executablePath: isDev
+                ? localExecutablePath
+                : await chromium.executablePath(remoteExecutablePath),
+            headless: chromium.headless,
+        });
+
         let sortByOption = 'features';
         let targetResult = 10;
         let rating = null;
@@ -50,29 +60,16 @@ export async function POST(req) {
 
         let page = null;
         let sortURL = null;
-        console.log(sortByOption);
-        if (sortByOption == 'priceLowToHigh') {
-            sortURL = '&s=price-asc-rank';
-        }
-        else if (sortByOption == 'priceHighToLow') {
-            sortURL = '&s=price-desc-rank';
-        }
+
         let url = `https://www.amazon.ca/s?k=${productName}`;
         if (sortURL != null) {
             url = url + sortURL;
         }
-
-        browser = await puppeteer.launch({
-            args: isDev ? [] : chromium.args,
-            defaultViewport: { width: 1920, height: 1080 },
-            executablePath: isDev
-                ? localExecutablePath
-                : await chromium.executablePath(remoteExecutablePath),
-            headless: chromium.headless,
-        });
-
         page = await browser.newPage();
 
+
+
+        console.log(url)
         await page.goto(url);
         await waitTillAmazonHTMLRendered(page);
 
@@ -148,7 +145,7 @@ export async function POST(req) {
         }
 
         await browser.close();
-        console.log('browser closed')
+
         return NextResponse.json(results, { status: 200 });
 
     }
@@ -168,13 +165,13 @@ export async function GET(req) {
     );
 }
 
-const waitTillAmazonHTMLRendered = async (page, timeout = 3000) => {
+const waitTillAmazonHTMLRendered = async (page, timeout = 5000) => {
     const checkDurationMsecs = 500;
     const maxChecks = timeout / checkDurationMsecs;
     let lastHTMLSize = 0;
     let checkCounts = 1;
     let countStableSizeIterations = 0;
-    const minStableSizeIterations = 0;
+    const minStableSizeIterations = 2;
     await page.waitForSelector(".s-result-list");
 
     while (checkCounts++ <= maxChecks) {
