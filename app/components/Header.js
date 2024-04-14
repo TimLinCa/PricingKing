@@ -6,7 +6,7 @@ import { AiOutlineSearch } from 'react-icons/ai';
 import logo from "../images/logo.png";
 import ThemeSwitcher from "./ThemeSwitcher";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, cn, Divider, Avatar, Checkbox, Input } from "@nextui-org/react";
-import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
+import { Popover, PopoverTrigger, PopoverContent, Link } from "@nextui-org/react";
 import { useState } from "react";
 import { Rating } from 'react-simple-star-rating'
 const isDev = process.env.NODE_ENV === "development";
@@ -29,6 +29,9 @@ const Header = (props) => {
         [selectedSortKeys]
     );
 
+    async function handleAboutMeClick(e) {
+
+    }
 
     async function handleSearch(e) {
         e.preventDefault();
@@ -47,7 +50,7 @@ const Header = (props) => {
             else if (selectedSortValue === "Price: High To Low") {
                 sortByOption = '&sort=priceHighToLow';
             }
-            router.push(`/gp/result?q=${encodeSearchQuery}&wb=${websites}&ir=${isSelectedStarts}&r=${rating}&ire=${isSelectedReviews}&res=${reviews}${sortByOption}`);
+            router.push(`/pages/pk/result?q=${encodeSearchQuery}&wb=${websites}&ir=${isSelectedStarts}&r=${rating}&ire=${isSelectedReviews}&res=${reviews}${sortByOption}`);
         }
     }
 
@@ -170,10 +173,17 @@ const Header = (props) => {
                     <div className="flex-1 self-center ">
 
                         <div className="flex flex-row items-center justify-end">
-                            <ThemeSwitcher></ThemeSwitcher>
-                            <div>
-                                <Button color="primary" variant="ghost">Log In</Button>
+
+                            <div className="mr-4">
+                                <Link href="#" onClick={() => handleAboutMeClick} color="primary">ABOUT ME</Link>
                             </div>
+
+
+                            <div className="mr-2">
+                                <ThemeSwitcher></ThemeSwitcher>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>

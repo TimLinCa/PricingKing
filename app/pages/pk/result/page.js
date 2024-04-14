@@ -1,6 +1,6 @@
 "use client";
 import { CircularProgress } from "@nextui-org/react";
-import ProductList from "../../components/productList";
+import ProductList from "../../../components/productList";
 import axios from "axios";
 import useSWR from 'swr';
 const cheerio = require('cheerio');
@@ -31,7 +31,6 @@ export default function SearchPage({ searchParams }) {
     return (
         <div className=" m-8">
             {
-
                 isLoading ? <CircularProgress label="Searching..."></CircularProgress> :
                     error ? <div>Something went wrong, Please try again.</div> :
                         <ProductList productList={productList} />
@@ -43,11 +42,9 @@ export default function SearchPage({ searchParams }) {
 
 const productListFetcher = async (params) => {
     const { wb, productName, isRating, rating, isReviews, reviews, sortByOption } = params;
-    const browserAPI = "/api/openBrowser";
-    const AmazonAPI = "/api/searchAmazon";
-    const WalmartAPI = "/api/searchWalmart";
+
     console.log(sortByOption);
-    const apiKey = process.env.ScraperApiKey;
+
     let rating_req = null;
     let reviews_req = null;
     if (isRating === 'true') {
@@ -59,18 +56,27 @@ const productListFetcher = async (params) => {
     }
 
     //website, productName, sortByOption, minRating, minReviews, targetResult
-
     let AmazonProductList = null;
     let WalmartProductList = null;
+    let amazonPromise = null;
+    let walmartPromise = null;
     if (wb.includes('Amazon')) {
-        AmazonProductList = await SearchAmazon(productName, sortByOption, rating_req, reviews_req);
+        console.log('searching Amazon');
+        amazonPromise = SearchAmazon(productName, sortByOption, rating_req, reviews_req);
     }
 
-    // if (wb.includes('Walmart')) {
+    if (wb.includes('Walmart')) {
+        console.log('searching Walmart');
+        walmartPromise = SearchWalmart(productName, sortByOption, rating_req, reviews_req);
+    }
 
-    //     WalmartProductList = await SearchWalmart(productName, sortByOption);
-    // }
-
+    console.log('waiting for promises');
+    if (amazonPromise) {
+        AmazonProductList = await amazonPromise;
+    }
+    if (walmartPromise) {
+        WalmartProductList = await walmartPromise;
+    }
     //concat two lists
     let productList = [];
     if (AmazonProductList && WalmartProductList) {
@@ -82,44 +88,28 @@ const productListFetcher = async (params) => {
     else if (WalmartProductList) {
         productList = WalmartProductList;
     }
+    productList.sort((a, b) => a.price - b.price);
     return productList;
 }
 
-const SearchWalmart = async (productName, sortByOption) => {
-    let sortURL = '&sort=best_seller';
-    let WalMartUrl = `https://www.walmart.ca/en/search?q=${productName}`;
-    if (sortByOption == 'priceLowToHigh') {
-        sortURL = '&sort=price_low';
-    }
-    else if (sortByOption == 'priceHighToLow') {
-        sortURL = '&sort=price_high';
+const SearchWalmart = async (productName, sortByOption, rating, reviews) => {
+
+    const request = {
+        "productName": productName,
+        "sortByOption": sortByOption,
     }
 
-    if (sortURL != null) {
-        WalMartUrl = WalMartUrl + sortURL;
+    if (rating != null) {
+        request.rating = rating;
+    }
+    if (reviews != null) {
+        request.reviews = reviews;
     }
 
-    console.log('start scraping');
-    // let ScraperApi = `https://api.scraperapi.com/?api_key=${ScraperApiKey}&url=${WalMartUrl}&autoparse=true`;
-    const response = await axios.post('/api/searchWalmart', { productName: productName, sortByOption: sortByOption });
 
+    const response = await axios.post('/api/searchWalmart', request);
 
-    // const amazon_res = await axios.post(ScraperApi);
-    console.log(response.data);
-
-    const results = [];
-    // console.log(amazon_res.data);
-    // for (let product of walMart_res.data.items) {
-    //     results.push({
-    //         title: product['name'],
-    //         imgPath: product['image'],
-    //         starts: product['rating'].averageRating,
-    //         price: product['price'],
-    //         link: product['url'],
-    //         reviews: product['rating'].numberOfReviews,
-    //         "website": "Walmart"
-    //     });
-    // }
+    const results = response.data;
 
     return results;
 }

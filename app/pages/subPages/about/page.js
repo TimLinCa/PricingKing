@@ -1,9 +1,8 @@
-
-export default function Home() {
+export default function About() {
     return (
 
         <div className="fixed h-full w-full items-center justify-center">
-            <p>HomePage</p>
+            <p>About me</p>
         </div>
     );
 }
