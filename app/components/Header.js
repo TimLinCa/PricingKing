@@ -9,9 +9,10 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button, cn, Divi
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import { useState } from "react";
 import { Rating } from 'react-simple-star-rating'
+const isDev = process.env.NODE_ENV === "development";
 const Header = (props) => {
 
-    const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Amazon", "Walmart"]));
+    const [selectedKeys, setSelectedKeys] = React.useState(new Set(["Amazon"]));
     const [isSelectedReviews, setIsSelectedReviews] = React.useState(false);
     const [isSelectedStarts, setIsSelectedStarts] = React.useState(false);
     const [rating, setRating] = React.useState(4);
@@ -84,6 +85,7 @@ const Header = (props) => {
                                             >Amazon
                                             </DropdownItem>
                                             <DropdownItem
+                                                isReadOnly={isDev ? false : true}
                                                 key="Walmart"
                                                 startContent={<Avatar color='secondary' className=" max-h-[20px] max-w-[20px] " name="Amazon" src="https://upload.wikimedia.org/wikipedia/commons/1/14/Walmart_Spark.svg" />}
                                             >Walmart
@@ -178,9 +180,6 @@ const Header = (props) => {
             </div>
             <Divider />
         </div >
-
-
-
     );
 }
 

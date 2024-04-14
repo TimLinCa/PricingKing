@@ -41,11 +41,12 @@ export async function POST(req) {
     else if (sortByOption == 'priceHighToLow') {
         sortURL = '&sort=price_high';
     }
-    let url = `https://www.walmart.ca/en/search?q=${productName}`;
+    let url = `https://www.bestbuy.ca/en-ca/search?${productName}`;
+    // let url = `https://www.walmart.ca/en/search?q=${productName}`;
 
-    if (sortURL != null) {
-        url = url + sortURL;
-    }
+    // if (sortURL != null) {
+    //     url = url + sortURL;
+    // }
     url = encodeURIComponent(url);
     const API_KEY = process.env.NEXT_PUBLIC_CRAWLBASE_APIKEY;
     const crawlbaseUrl = `https://api.crawlbase.com/scraper?token=${API_KEY}&url=${url}`;

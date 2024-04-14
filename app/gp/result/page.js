@@ -5,9 +5,10 @@ import axios from "axios";
 import useSWR from 'swr';
 const cheerio = require('cheerio');
 const ScraperApiKey = process.env.NEXT_PUBLIC_SCRAPER_APIKEY;
+const isDev = process.env.NODE_ENV === "development";
 
 export default function SearchPage({ searchParams }) {
-    console.log(searchParams);
+
     const wb = searchParams['wb'];
     const productName = searchParams['q'];
     const isRating = searchParams['ir'];
@@ -26,9 +27,6 @@ export default function SearchPage({ searchParams }) {
         sortByOption: sortByOption
     },
         productListFetcher, { revalidateOnFocus: false });
-
-    console.log(error);
-    console.log(productList);
 
     return (
         <div className=" m-8">
@@ -50,19 +48,14 @@ const productListFetcher = async (params) => {
     const WalmartAPI = "/api/searchWalmart";
     console.log(sortByOption);
     const apiKey = process.env.ScraperApiKey;
-
-
-    const request = {
-        "productName": productName,
-        "sortByOption": sortByOption,
-    }
-
+    let rating_req = null;
+    let reviews_req = null;
     if (isRating === 'true') {
-        request.rating = rating;
+        rating_req = rating;
     }
 
     if (isReviews === 'true') {
-        request.reviews = reviews;
+        reviews_req = reviews;
     }
 
     //website, productName, sortByOption, minRating, minReviews, targetResult
@@ -70,18 +63,13 @@ const productListFetcher = async (params) => {
     let AmazonProductList = null;
     let WalmartProductList = null;
     if (wb.includes('Amazon')) {
-
-        // const amazon_res = await axios.post(AmazonAPI, request);
-
-        // AmazonProductList = amazon_res.data;
-
-        AmazonProductList = await SearchAmazon(productName, sortByOption);
+        AmazonProductList = await SearchAmazon(productName, sortByOption, rating_req, reviews_req);
     }
 
-    if (wb.includes('Walmart')) {
+    // if (wb.includes('Walmart')) {
 
-        WalmartProductList = await SearchWalmart(productName, sortByOption);
-    }
+    //     WalmartProductList = await SearchWalmart(productName, sortByOption);
+    // }
 
     //concat two lists
     let productList = [];
@@ -96,19 +84,6 @@ const productListFetcher = async (params) => {
     }
     return productList;
 }
-
-const parseProductReview = (inputString) => {
-    const ratingRegex = /(\d+\.\d+)/;
-    const reviewCountRegex = /(\d+) reviews/;
-
-    const ratingMatch = inputString.match(ratingRegex);
-    const reviewCountMatch = inputString.match(reviewCountRegex);
-
-    const rating = ratingMatch?.length > 0 ? parseFloat(ratingMatch[0]) : null;
-    const reviewCount = reviewCountMatch?.length > 1 ? parseInt(reviewCountMatch[1]) : null;
-
-    return { rating, reviewCount };
-};
 
 const SearchWalmart = async (productName, sortByOption) => {
     let sortURL = '&sort=best_seller';
@@ -149,35 +124,57 @@ const SearchWalmart = async (productName, sortByOption) => {
     return results;
 }
 
-const SearchAmazon = async (productName, sortByOption) => {
-    let AmazonUrl = `https://www.amazon.ca/s?k=${productName}`;
-    let sortURL = null;
-    if (sortByOption == 'priceLowToHigh') {
-        sortURL = '&s=price-asc-rank';
+const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
+    let results = [];
+    if (isDev) {
+
+        const AmazonAPI = "/api/searchAmazon";
+        const request = {
+            "productName": productName,
+            "sortByOption": sortByOption,
+        }
+
+        if (rating != null) {
+            request.rating = rating;
+        }
+        if (reviews != null) {
+            request.reviews = reviews;
+        }
+
+        const amazon_res = await axios.post(AmazonAPI, request);
+        results = amazon_res.data;
     }
-    else if (sortByOption == 'priceHighToLow') {
-        sortURL = '&s=price-desc-rank';
-    }
-    if (sortURL != null) {
-        AmazonUrl = AmazonUrl + sortURL;
+    else {
+        console.log('start scraping Vercel')
+        let AmazonUrl = `https://www.amazon.ca/s?k=${productName}`;
+        let sortURL = null;
+        if (sortByOption == 'priceLowToHigh') {
+            sortURL = '&s=price-asc-rank';
+        }
+        else if (sortByOption == 'priceHighToLow') {
+            sortURL = '&s=price-desc-rank';
+        }
+        if (sortURL != null) {
+            AmazonUrl = AmazonUrl + sortURL;
+        }
+
+        let ScraperApi = `https://api.scraperapi.com/?api_key=${ScraperApiKey}&url=${AmazonUrl}&autoparse=true`;
+
+        const amazon_res = await axios.post(ScraperApi);
+
+        for (let product of amazon_res.data.results) {
+            results.push({
+                title: product['name'],
+                imgPath: product['image'],
+                starts: product['stars'],
+                price: product['price_string'],
+                link: product['url'],
+                reviews: product['total_reviews'],
+                "website": "Amazon"
+            });
+        }
     }
 
-    let ScraperApi = `https://api.scraperapi.com/?api_key=${ScraperApiKey}&url=${AmazonUrl}&autoparse=true`;
-
-    const amazon_res = await axios.post(ScraperApi);
-    const results = [];
-    console.log(amazon_res.data.results);
-    for (let product of amazon_res.data.results) {
-        results.push({
-            title: product['name'],
-            imgPath: product['image'],
-            starts: product['stars'],
-            price: product['price_string'],
-            link: product['url'],
-            reviews: product['total_reviews'],
-            "website": "Amazon"
-        });
-    }
 
     return results;
 }

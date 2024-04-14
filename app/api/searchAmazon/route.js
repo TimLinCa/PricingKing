@@ -16,12 +16,9 @@ const remoteExecutablePath =
 
 const isDev = process.env.NODE_ENV === "development";
 
-
-// const { chromium } = require("playwright");
 export async function POST(req) {
     let browser = null;
     try {
-
         browser = await puppeteer.launch({
             args: isDev ? [] : chromium.args,
             defaultViewport: { width: 1920, height: 1080 },
@@ -30,7 +27,6 @@ export async function POST(req) {
                 : await chromium.executablePath(remoteExecutablePath),
             headless: chromium.headless,
         });
-
         let sortByOption = 'features';
         let targetResult = 10;
         let rating = null;
@@ -55,25 +51,28 @@ export async function POST(req) {
 
 
         let results = [];
-        let gotResults = 0;
+        let gotResults = -1;
         let firstPage = true;
 
         let page = null;
         let sortURL = null;
-
+        console.log(sortByOption);
+        if (sortByOption == 'priceLowToHigh') {
+            sortURL = '&s=price-asc-rank';
+        }
+        else if (sortByOption == 'priceHighToLow') {
+            sortURL = '&s=price-desc-rank';
+        }
         let url = `https://www.amazon.ca/s?k=${productName}`;
         if (sortURL != null) {
             url = url + sortURL;
         }
         page = await browser.newPage();
 
-
-
-        console.log(url)
         await page.goto(url);
         await waitTillAmazonHTMLRendered(page);
 
-        while (gotResults < targetResult) {
+        while (gotResults <= targetResult) {
             if (!firstPage) {
                 await waitTillAmazonHTMLRendered(page);
             }
@@ -139,7 +138,6 @@ export async function POST(req) {
                     else {
                         break;
                     }
-
                 }
             }
         }
