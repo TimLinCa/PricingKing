@@ -30,7 +30,7 @@ const Header = (props) => {
     );
 
     async function handleAboutMeClick(e) {
-
+        router.push(`/pages/subPages/about`);
     }
 
     async function handleSearch(e) {
@@ -175,7 +175,7 @@ const Header = (props) => {
                         <div className="flex flex-row items-center justify-end">
 
                             <div className="mr-4">
-                                <Link href="#" onClick={() => handleAboutMeClick} color="primary">ABOUT ME</Link>
+                                <Link href="/pages/subPages/about" color="primary">ABOUT ME</Link>
                             </div>
 
 
