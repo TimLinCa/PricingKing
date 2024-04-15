@@ -116,8 +116,9 @@ const SearchWalmart = async (productName, sortByOption, rating, reviews) => {
 
 const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
     let results = [];
+    console.log('searching Amazon')
+    console.log(isDev);
     if (isDev) {
-
         const AmazonAPI = "/api/searchAmazon";
         const request = {
             "productName": productName,
@@ -149,7 +150,7 @@ const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
         }
 
         let ScraperApi = `https://api.scraperapi.com/?api_key=${ScraperApiKey}&url=${AmazonUrl}&autoparse=true`;
-        console.log(ScraperApi);
+        console.log("ScraperApi", ScraperApi);
         const amazon_res = await axios.post(ScraperApi);
         console.log(amazon_res.data);
         for (let product of amazon_res.data.results) {
@@ -165,6 +166,5 @@ const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
         }
     }
 
-    console.log(results);
     return results;
 }
