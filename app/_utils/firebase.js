@@ -22,7 +22,7 @@ const firebaseConfig = isDev ? {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_VERCEL_MESSAGING_SENDER_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_VERCEL_APP_ID,
 };
-console.log(firebaseConfig);
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);

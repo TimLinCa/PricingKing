@@ -32,7 +32,7 @@ export async function POST(req) {
 
         let results = [];
         let sortURL = null;
-        console.log(sortByOption);
+
         if (sortByOption == 'priceLowToHigh') {
             sortURL = '&sort=price_low';
         }

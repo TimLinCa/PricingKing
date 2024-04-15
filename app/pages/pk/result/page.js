@@ -63,16 +63,14 @@ const productListFetcher = async (params) => {
     let amazonPromise = null;
     let walmartPromise = null;
     if (wb.includes('Amazon')) {
-        console.log('searching Amazon');
         amazonPromise = SearchAmazon(productName, sortByOption, rating_req, reviews_req);
     }
 
     if (wb.includes('Walmart')) {
-        console.log('searching Walmart');
         walmartPromise = SearchWalmart(productName, sortByOption, rating_req, reviews_req);
     }
 
-    console.log('waiting for promises');
+
     if (amazonPromise) {
         AmazonProductList = await amazonPromise;
     }
@@ -151,15 +149,15 @@ const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
         }
 
         let ScraperApi = `https://api.scraperapi.com/?api_key=${ScraperApiKey}&url=${AmazonUrl}&autoparse=true`;
-
+        console.log(ScraperApi);
         const amazon_res = await axios.post(ScraperApi);
-
+        console.log(amazon_res.data);
         for (let product of amazon_res.data.results) {
             results.push({
                 title: product['name'],
                 imgPath: product['image'],
                 starts: product['stars'],
-                price: product['price_string'].replace("$", ""),
+                price: product['price'],
                 link: product['url'],
                 reviews: product['total_reviews'],
                 "website": "Amazon"
@@ -167,6 +165,6 @@ const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
         }
     }
 
-
+    console.log(results);
     return results;
 }
