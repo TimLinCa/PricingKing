@@ -8,7 +8,6 @@ const isDev = process.env.NODE_ENV === "development";
 
 // Your web app's Firebase configuration
 const firebaseConfig = isDev ? {
-
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_LOCAL_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_LOCAL_AUTH_DOMAIN,
     projectId: process.env.NEXT_PUBLIC_FIREBASE_LOCAL_PROJECT_ID,
@@ -23,7 +22,7 @@ const firebaseConfig = isDev ? {
     messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_VERCEL_MESSAGING_SENDER_ID,
     appId: process.env.NEXT_PUBLIC_FIREBASE_VERCEL_APP_ID,
 };
-
+console.log(firebaseConfig);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
