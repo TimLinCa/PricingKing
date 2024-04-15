@@ -49,10 +49,10 @@ export default function Sidebar() {
     const getBookMarks = () => {
         return (
             <div className="overflow-y-auto w-full h-full ">
-                <div className="sticky top-0 z-50 grid grid-cols-[33.3%_33.3%_33.3%] p-2 bg-secondary-100">
-                    <div></div>
-                    <div className="text-lg flex w-full justify-center items-center">Bookmarks</div>
-                    <div className=" flex justify-end">
+                <div className="sticky flex flex-row top-0 z-50 p-2 bg-secondary-100">
+                    <div className="mr-[15%]"></div>
+                    <div className="text-lg flex w-full justify-center items-center mr-[5%]">Bookmarks</div>
+                    <div className=" flex justify-end mr-[4%]">
                         <div>
                             <Button onClick={handleAddBookMark} isIconOnly={true} color="primary" variant="ghost" size="sm" className="justify-center ">
                                 <div className="flex justify-center">
@@ -82,8 +82,8 @@ export default function Sidebar() {
                 </div>
 
 
-                <div className="fixed  bottom-0 z-50 min-w-[10%] p-2 bg-secondary-100">
-                    <Divider></Divider>
+                <div className="fixed  bottom-0 z-50 min-w-[9.99%] max-w-[9.99%] p-2 bg-secondary-100">
+                    <Divider className="mb-1"></Divider>
                     <div className="grid grid-cols-[66.6%_33.3%]">
                         <div className="text-lg flex w-full justify-center items-center">Hi {user.email.split('@')[0]}</div>
                         <div className="flex justify-end">

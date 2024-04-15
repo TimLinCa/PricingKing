@@ -41,6 +41,12 @@ module.exports = {
           {
             foreground: "#FFFFFF",
             DEFAULT: "#F54180",
+          },
+          success:
+          {
+            foreground: "#FFFFFF",
+            DEFAULT: "#1c1c1c",
+
           }
         }
       },
@@ -62,6 +68,12 @@ module.exports = {
           {
             foreground: "#FFFFFF",
             DEFAULT: "#F54180",
+          },
+          success:
+          {
+            foreground: "#1c1c1c",
+            DEFAULT: "#FFFFFF",
+
           }
         }
       },

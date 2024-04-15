@@ -41,7 +41,7 @@ export default function BookMark(props) {
         const webSplit = websites.split(',');
         return (
 
-            <div className="flex flex-row gap-3 ">
+            <div className="flex flex-row gap-3 flex-1 ">
                 {
                     webSplit.map((website, index) => {
                         return (
@@ -61,14 +61,18 @@ export default function BookMark(props) {
         <div className="flex items-center justify-center max-w-[500px] m-2">
 
             <Card isPressable={true} onPress={() => onPressHandle()} className="w-full">
-                <CardHeader className="flex flex-row gap-2 justify-center">
-                    <p className="text-md">{productName}</p>
-                    {getWebIcons()}
-                    <div className="absolute right-0 mr-2 ">
-                        <Button onClick={deleteBookMark} color="danger" size="sm" variant="ghost" isIconOnly={true}>
-                            <AiOutlineMinus size={15} />
-                        </Button>
+                <CardHeader >
+
+                    <div className="flex flex-row w-full gap-2  items-center">
+                        <p className="text-md ">{productName}</p>
+                        {getWebIcons()}
+                        <div className="flex mr-2 justify-end">
+                            <Button onClick={deleteBookMark} color="danger" size="sm" variant="ghost" isIconOnly={true}>
+                                <AiOutlineMinus size={15} />
+                            </Button>
+                        </div>
                     </div>
+
 
                 </CardHeader>
                 <Divider />
