@@ -6,7 +6,6 @@ import useSWR from 'swr';
 const cheerio = require('cheerio');
 const ScraperApiKey = process.env.NEXT_PUBLIC_SCRAPER_APIKEY;
 const isDev = process.env.NODE_ENV === "development";
-
 export default function SearchPage({ searchParams }) {
 
     const wb = searchParams['wb'];
@@ -29,6 +28,7 @@ export default function SearchPage({ searchParams }) {
         productListFetcher, { revalidateOnFocus: false });
 
     return (
+
         <div className=" m-8">
             {
                 isLoading ? <CircularProgress label="Searching..."></CircularProgress> :
@@ -36,6 +36,8 @@ export default function SearchPage({ searchParams }) {
                         <ProductList productList={productList} />
             }
         </div>
+
+
     );
 }
 
@@ -157,7 +159,7 @@ const SearchAmazon = async (productName, sortByOption, rating, reviews) => {
                 title: product['name'],
                 imgPath: product['image'],
                 starts: product['stars'],
-                price: product['price_string'],
+                price: product['price_string'].replace("$", ""),
                 link: product['url'],
                 reviews: product['total_reviews'],
                 "website": "Amazon"

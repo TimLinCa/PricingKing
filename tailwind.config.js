@@ -36,6 +36,11 @@ module.exports = {
             50: '#020617',
             100: "#FFFFFF",
             DEFAULT: "#FFFFFF",
+          },
+          danger:
+          {
+            foreground: "#FFFFFF",
+            DEFAULT: "#F54180",
           }
         }
       },
@@ -52,6 +57,11 @@ module.exports = {
             50: '#f8fafc',
             100: "#000000",
             DEFAULT: "#FFFFFF",
+          },
+          danger:
+          {
+            foreground: "#FFFFFF",
+            DEFAULT: "#F54180",
           }
         }
       },

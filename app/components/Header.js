@@ -58,106 +58,106 @@ const Header = (props) => {
         <div className='header sticky top-0 z-50 bg-secondary-100'>
             <div>
                 <div className='flex flex-row py-[15px]'>
-                    <div className="flex-1 ml-5">
-                        <div className="flex flex-row ">
-                            <Image
-                                src={logo}
-                                width={50}
-                                height={100}
-                                alt="Picture of the logo"
-                            />
-
-                            <div className="flex flex-1 justify-end items-center mr-4">
-
-                                <div className="mr-4">
-                                    <Dropdown>
-                                        <DropdownTrigger>
-                                            <Button color="primary" variant="ghost">Website</Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            selectionMode="multiple"
-                                            disallowEmptySelection
-                                            closeOnSelect={false}
-                                            variant="flat"
-                                            selectedKeys={selectedKeys}
-                                            onSelectionChange={setSelectedKeys}
-                                        >
-                                            <DropdownItem
-                                                key="Amazon"
-                                                startContent={<Avatar color='secondary' className=" max-h-[20px] max-w-[20px] " name="Amazon" src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" />}
-                                            >Amazon
-                                            </DropdownItem>
-                                            <DropdownItem
-                                                isReadOnly={isDev ? false : true}
-                                                key="Walmart"
-                                                startContent={<Avatar color='secondary' className=" max-h-[20px] max-w-[20px] " name="Amazon" src="https://upload.wikimedia.org/wikipedia/commons/1/14/Walmart_Spark.svg" />}
-                                            >Walmart
-                                            </DropdownItem>
-
-                                        </DropdownMenu>
-
-                                    </Dropdown>
-                                </div>
-
-                                <div className="mr-4">
-                                    <Popover >
-                                        <PopoverTrigger>
-                                            <Button color="primary" variant="ghost">Rating</Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent>
-                                            <div className="flex flex-row justify-start  w-full ml-1">
-                                                <Checkbox isSelected={isSelectedStarts} onValueChange={setIsSelectedStarts} defaultSelected></Checkbox>
-                                                <Rating SVGstyle={{ 'display': 'inline' }} initialValue={rating} onClick={handleRating} readonly={!isSelectedStarts} allowFraction={true} />
-                                            </div>
-                                            <div className="flex flex-row  w-full ml-1">
-                                                <Checkbox isSelected={isSelectedReviews} onValueChange={setIsSelectedReviews} defaultSelected></Checkbox>
-                                                <Input
-                                                    className="max-w-[200px]"
-                                                    isDisabled={!isSelectedReviews}
-                                                    type='number'
-                                                    size={20}
-                                                    value={reviews}
-                                                    onValueChange={setReviews}
-                                                    startContent={
-                                                        <p>Reviews</p>
-                                                    } />
-                                            </div>
-
-                                        </PopoverContent>
-                                    </Popover >
-                                </div>
-
-                                <div className="w-[145px]">
-                                    <Dropdown className="w-full">
-                                        <DropdownTrigger>
-                                            <Button
-                                                color="primary"
-                                                variant="ghost"
-                                                className="capitalize w-full"
-                                            >
-                                                {selectedSortValue}
-                                            </Button>
-                                        </DropdownTrigger>
-                                        <DropdownMenu
-                                            aria-label="Single selection example"
-                                            variant="flat"
-                                            disallowEmptySelection
-                                            selectionMode="single"
-                                            selectedKeys={selectedSortKeys}
-                                            onSelectionChange={setSelectedSortKeys}
-                                        >
-                                            <DropdownItem key="Default">Default</DropdownItem>
-                                            <DropdownItem key="Price: Low To High">Price: Low to High</DropdownItem>
-                                            <DropdownItem key="Price: High To Low">Price High to Low</DropdownItem>
-                                        </DropdownMenu>
-                                    </Dropdown>
-                                </div>
-
-                            </div>
-                        </div>
-
-
+                    <div className="w-[20%]">
+                        <Image
+                            src={logo}
+                            width={50}
+                            height={100}
+                            alt="Picture of the logo"
+                        />
                     </div>
+                    <div className="flex flex-row">
+                        <div className="flex flex-1 justify-end items-center mr-4">
+
+                            <div className="mr-4">
+                                <Dropdown>
+                                    <DropdownTrigger>
+                                        <Button color="primary" variant="ghost">Website</Button>
+                                    </DropdownTrigger>
+                                    <DropdownMenu
+                                        selectionMode="multiple"
+                                        disallowEmptySelection
+                                        closeOnSelect={false}
+                                        variant="flat"
+                                        selectedKeys={selectedKeys}
+                                        onSelectionChange={setSelectedKeys}
+                                    >
+                                        <DropdownItem
+                                            key="Amazon"
+                                            startContent={<Avatar color='secondary' className=" max-h-[20px] max-w-[20px] " name="Amazon" src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg" />}
+                                        >Amazon
+                                        </DropdownItem>
+                                        <DropdownItem
+                                            isReadOnly={isDev ? false : true}
+                                            key="Walmart"
+                                            startContent={<Avatar color='secondary' className=" max-h-[20px] max-w-[20px] " name="Amazon" src="https://upload.wikimedia.org/wikipedia/commons/1/14/Walmart_Spark.svg" />}
+                                        >Walmart
+                                        </DropdownItem>
+
+                                    </DropdownMenu>
+
+                                </Dropdown>
+                            </div>
+
+                            <div className="mr-4">
+                                <Popover >
+                                    <PopoverTrigger>
+                                        <Button color="primary" variant="ghost">Rating</Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent>
+                                        <div className="flex flex-row justify-start  w-full ml-1">
+                                            <Checkbox isSelected={isSelectedStarts} onValueChange={setIsSelectedStarts} defaultSelected></Checkbox>
+                                            <Rating SVGstyle={{ 'display': 'inline' }} initialValue={rating} onClick={handleRating} readonly={!isSelectedStarts} allowFraction={true} />
+                                        </div>
+                                        <div className="flex flex-row  w-full ml-1">
+                                            <Checkbox isSelected={isSelectedReviews} onValueChange={setIsSelectedReviews} defaultSelected></Checkbox>
+                                            <Input
+                                                className="max-w-[200px]"
+                                                isDisabled={!isSelectedReviews}
+                                                type='number'
+                                                size={20}
+                                                value={reviews}
+                                                onValueChange={setReviews}
+                                                startContent={
+                                                    <p>Reviews</p>
+                                                } />
+                                        </div>
+
+                                    </PopoverContent>
+                                </Popover >
+                            </div>
+
+                            <div className="w-[130px]">
+                                <Dropdown className="w-full">
+                                    <DropdownTrigger>
+                                        <Button
+                                            color="primary"
+                                            variant="ghost"
+                                            className="capitalize w-full"
+                                        >
+                                            {selectedSortValue}
+                                        </Button>
+                                    </DropdownTrigger>
+                                    <DropdownMenu
+                                        aria-label="Single selection example"
+                                        variant="flat"
+                                        disallowEmptySelection
+                                        selectionMode="single"
+                                        selectedKeys={selectedSortKeys}
+                                        onSelectionChange={setSelectedSortKeys}
+                                    >
+                                        <DropdownItem key="Default">Default</DropdownItem>
+                                        <DropdownItem key="Price: Low To High">Price: Low to High</DropdownItem>
+                                        <DropdownItem key="Price: High To Low">Price High to Low</DropdownItem>
+                                    </DropdownMenu>
+                                </Dropdown>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+
 
                     <div className="self-center">
                         <form className='w-[440px]' onSubmit={handleSearch} >
