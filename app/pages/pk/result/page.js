@@ -3,7 +3,6 @@ import { CircularProgress } from "@nextui-org/react";
 import ProductList from "../../../components/productList";
 import axios from "axios";
 import useSWR from 'swr';
-const cheerio = require('cheerio');
 const ScraperApiKey = process.env.NEXT_PUBLIC_SCRAPER_APIKEY;
 const isDev = process.env.NODE_ENV === "development";
 export default function SearchPage({ searchParams }) {
@@ -32,20 +31,16 @@ export default function SearchPage({ searchParams }) {
         <div className=" m-8">
             {
                 isLoading ? <CircularProgress label="Searching..."></CircularProgress> :
-                    error ? <div>Something went wrong, Please try again.</div> :
+                    error ? <div>Something went wrong, Please try again. Msg:{error}</div> :
                         <ProductList productList={productList} />
             }
         </div>
-
-
     );
 }
 
 
 const productListFetcher = async (params) => {
     const { wb, productName, isRating, rating, isReviews, reviews, sortByOption } = params;
-
-    console.log(sortByOption);
 
     let rating_req = null;
     let reviews_req = null;
