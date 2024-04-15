@@ -1,19 +1,22 @@
 "use client";
 import { CircularProgress } from "@nextui-org/react";
+import { useSearchParams } from 'next/navigation'
 import ProductList from "../../../components/productList";
 import axios from "axios";
 import useSWR from 'swr';
+import { useEffect, useState } from "react";
 const ScraperApiKey = process.env.NEXT_PUBLIC_SCRAPER_APIKEY;
 const isDev = process.env.NODE_ENV === "development";
-export default function SearchPage({ searchParams }) {
+export default function SearchPage() {
 
-    const wb = searchParams['wb'];
-    const productName = searchParams['q'];
-    const isRating = searchParams['ir'];
-    const isReviews = searchParams['ire'];
-    const rating = searchParams['r'];
-    const reviews = searchParams['res'];
-    const sortByOption = searchParams['sort'];
+    const pathname = useSearchParams();
+    const productName = pathname.get('q');
+    const wb = pathname.get('wb');
+    const isRating = pathname.get('ir');
+    const rating = pathname.get('r');
+    const isReviews = pathname.get('ir');
+    const reviews = pathname.get('res');
+    const sortByOption = pathname.get('sort');
 
     const { data: productList, error, isLoading } = useSWR({
         wb: wb,
@@ -31,7 +34,7 @@ export default function SearchPage({ searchParams }) {
         <div className=" m-8">
             {
                 isLoading ? <CircularProgress label="Searching..."></CircularProgress> :
-                    error ? <div>Something went wrong, Please try again. Msg:{error}</div> :
+                    error ? <div>Something went wrong, Please try again. Msg:{error.message}</div> :
                         <ProductList productList={productList} />
             }
         </div>
@@ -41,7 +44,7 @@ export default function SearchPage({ searchParams }) {
 
 const productListFetcher = async (params) => {
     const { wb, productName, isRating, rating, isReviews, reviews, sortByOption } = params;
-
+    console.log('wb inside', wb);
     let rating_req = null;
     let reviews_req = null;
     if (isRating === 'true') {

@@ -2,8 +2,6 @@ import { Inter } from "next/font/google";
 import "../../globals.css";
 import Sidebar from "./components/sidebar";
 import Providers from "../../Provider";
-import Header from "../../components/Header";
-import { Divider } from "@nextui-org/react";
 const inter = Inter({ subsets: ["latin"] });
 import { Suspense } from 'react'
 export const metadata = {
